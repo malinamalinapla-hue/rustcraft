@@ -12,13 +12,12 @@ jobs:
       - name: Android SDK
         run: |
           SM=$(find $ANDROID_HOME $ANDROID_SDK_ROOT /usr/local/lib/android -name sdkmanager -type f 2>/dev/null | head -n1)
-          echo "sdkmanager: $SM"
           yes | $SM --licenses > /dev/null || true
           $SM "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/26.1.10909125" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/26.1.10909125" >> $GITHUB_ENV
+          ls $ANDROID_HOME/ndk
       - run: cargo install cargo-apk
       - run: cargo apk build --release --lib
-        env:
-          ANDROID_NDK_ROOT: ${{ env.ANDROID_HOME }}/ndk/26.1.10909125
-          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/26.1.10909125
       - uses: actions/upload-artifact@v4
-        with: { name: rustcraft-apk, path: target/release/apk/*.apk }
+        with: { name: rustcraft-apk, path: "**/release/apk/*.apk" }
