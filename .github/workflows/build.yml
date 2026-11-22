@@ -1,0 +1,20 @@
+name: Build APK
+on: [push, workflow_dispatch]
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+        with: { targets: aarch64-linux-android }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
+      - run: cargo install cargo-apk
+      - run: cargo apk build --release --lib
+        env:
+          ANDROID_NDK_ROOT: ${{ env.ANDROID_HOME }}/ndk/26.1.10909125
+          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/26.1.10909125
+      - uses: actions/upload-artifact@v4
+        with: { name: rustcraft-apk, path: target/release/apk/*.apk }
