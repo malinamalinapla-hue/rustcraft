@@ -12,7 +12,7 @@ name = "rustcraft"
 path = "src/main.rs"
 
 [dependencies]
-bevy = { version = "0.14", default-features = false, features = ["bevy_winit", "bevy_render", "bevy_core_pipeline", "android-native-activity", "multi-threaded", "x11"] }
+bevy = "0.14"
 bevy_egui = "0.28"
 azalea = { git = "https://github.com/azalea-rs/azalea" }
 tokio = { version = "1", features = ["rt-multi-thread"] }
