@@ -9,7 +9,7 @@ jobs:
         with: { targets: aarch64-linux-android }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
-      - uses: android-actions/setup-android@v3
+      - run: yes | sdkmanager --licenses > /dev/null || true
       - run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
       - run: cargo install cargo-apk
       - run: cargo apk build --release --lib
