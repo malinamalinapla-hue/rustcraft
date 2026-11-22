@@ -9,8 +9,12 @@ jobs:
         with: { targets: aarch64-linux-android }
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
-      - run: yes | sdkmanager --licenses > /dev/null || true
-      - run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
+      - name: Android SDK
+        run: |
+          SM=$(find $ANDROID_HOME $ANDROID_SDK_ROOT /usr/local/lib/android -name sdkmanager -type f 2>/dev/null | head -n1)
+          echo "sdkmanager: $SM"
+          yes | $SM --licenses > /dev/null || true
+          $SM "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
       - run: cargo install cargo-apk
       - run: cargo apk build --release --lib
         env:
